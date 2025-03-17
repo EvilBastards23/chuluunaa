@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://lbfevnyqqcx0"]
+
+[ext_resource type="PackedScene" uid="uid://eypdbxtvy44y" path="res://assets/brackeys_3d_game_assets/dungeon_assets/building/floor_wood.glb" id="1_v5177"]
+[ext_resource type="Texture2D" uid="uid://c8h7mbauh0tsd" path="res://assets/brackeys_3d_game_assets/dungeon_assets/dungeon_albedo.png" id="2_buakp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddijw"]
+albedo_texture = ExtResource("2_buakp")
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ieruo"]
+points = PackedVector3Array(-2, -0.1, -2, -2, -0.1, 2, -2, 0.0249951, -2, 2, -0.1, -2, -2, 0.0249951, 2, 2, -0.1, 2, -2, 0.05, -1.47533, -1.97533, 0.05, -1.97533, 2, 0.0249951, -2, -2, 0.05, 1.97494, 2, 0.0249951, 2, 1.97494, 0.05, -1.97533, 2, 0.05, -1.47533, 2, 0.05, 1.97494)
+
+[node name="floor_wood" instance=ExtResource("1_v5177")]
+
+[node name="floor_wood_large_dark" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_ddijw")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_ieruo")

@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://c3t0eiw2c8haq"]
+
+[ext_resource type="PackedScene" uid="uid://5hp854t712ss" path="res://assets/brackeys_3d_game_assets/dungeon_assets/building/wall_shelved.glb" id="1_jgt3w"]
+[ext_resource type="Texture2D" uid="uid://c8h7mbauh0tsd" path="res://assets/brackeys_3d_game_assets/dungeon_assets/dungeon_albedo.png" id="2_c5wk2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bp8fm"]
+albedo_texture = ExtResource("2_c5wk2")
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_jgt3w"]
+points = PackedVector3Array(2, 4, 0.499997, 0.408771, 2.89977, 0.779783, 0.439311, 2.84965, 0.789421, 1, 2.67463, 0.74993, 0.942052, 1.50117, 0.796784, 2, 0, 0.499997, 2, 4, -0.5, -2, 4, 0.499997, -1, 2.67463, 0.74993, 0.185983, 1.50117, 0.8676, 0.942052, 1.21104, 0.796784, 2, 0, -0.5, 0.185983, 1.21104, 0.8676, -2, 0, 0.499997, -2, 4, -0.5, -0.967893, 1.37314, 0.763049, -2, 0, -0.5, -1, 1.02467, 0.74993)
+
+[node name="wall_shelved" instance=ExtResource("1_jgt3w")]
+
+[node name="wall_shelves" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_bp8fm")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="wall_shelves" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall_shelves/StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_jgt3w")

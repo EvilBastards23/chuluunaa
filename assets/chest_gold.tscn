@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://dc5eig6r7u8s3"]
+
+[ext_resource type="PackedScene" uid="uid://bhcs5o7p6ml3b" path="res://assets/brackeys_3d_game_assets/dungeon_assets/props/chest_gold.glb" id="1_lbl1v"]
+[ext_resource type="Texture2D" uid="uid://c8h7mbauh0tsd" path="res://assets/brackeys_3d_game_assets/dungeon_assets/dungeon_albedo.png" id="2_517mp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h1bbh"]
+albedo_texture = ExtResource("2_517mp")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mw6e"]
+albedo_texture = ExtResource("2_517mp")
+
+[node name="chest_gold" instance=ExtResource("1_lbl1v")]
+
+[node name="chest_gold" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_h1bbh")
+
+[node name="chest_gold_lid" parent="chest_gold" index="0"]
+material_override = SubResource("StandardMaterial3D_2mw6e")

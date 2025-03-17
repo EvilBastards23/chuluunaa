@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://bdqqhxe5r3ris"]
+
+[ext_resource type="PackedScene" uid="uid://bojbvrphxg6a3" path="res://assets/brackeys_3d_game_assets/dungeon_assets/building/ceiling.glb" id="1_t1rc7"]
+[ext_resource type="Texture2D" uid="uid://c8h7mbauh0tsd" path="res://assets/brackeys_3d_game_assets/dungeon_assets/dungeon_albedo.png" id="2_jc1pw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xxx0d"]
+albedo_texture = ExtResource("2_jc1pw")
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5nser"]
+points = PackedVector3Array(-2, -0.0500045, -2, -2, 0.484086, -2, 2, -0.0500045, -2, -2, -0.250001, -1.14722, -2, 0.484086, 2, 2, 0.484086, -2, 2, -0.250001, -1.14722, -2, -0.250001, 1.14683, -2, -0.0500045, 2, 2, 0.484086, 2, 2, -0.250001, 1.14683, 2, -0.0500045, 2)
+
+[node name="ceiling" instance=ExtResource("1_t1rc7")]
+
+[node name="ceiling_tile" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_xxx0d")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="ceiling_tile" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ceiling_tile/StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_5nser")
