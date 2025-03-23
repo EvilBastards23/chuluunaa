@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://l0phj14llt1q"]
+
+[ext_resource type="PackedScene" uid="uid://bvijue4y84dro" path="res://assets/custom_assets/[AR] Ocean Assets - Starter Pack/3. Models/gltf/pirate_ship.glb" id="1_30eky"]
+
+[node name="pirate_ship" instance=ExtResource("1_30eky")]
