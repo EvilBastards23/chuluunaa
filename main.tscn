@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://cpiomdugf1x5s"]
+[gd_scene load_steps=42 format=3 uid="uid://cpiomdugf1x5s"]
 
 [ext_resource type="PackedScene" uid="uid://bl5bf5lcxlksg" path="res://assets/pillar_2.tscn" id="1_272bh"]
 [ext_resource type="Script" uid="uid://dv2lhskkvry66" path="res://main.gd" id="1_d13ii"]
@@ -22,6 +22,10 @@
 [ext_resource type="PackedScene" uid="uid://usga2mquhhae" path="res://candles.tscn" id="18_074og"]
 [ext_resource type="PackedScene" uid="uid://l0phj14llt1q" path="res://pirate_ship.tscn" id="19_82xsv"]
 [ext_resource type="PackedScene" uid="uid://c3miovt3dusaj" path="res://small_boat_2.tscn" id="20_getpj"]
+[ext_resource type="Script" uid="uid://owohkgbe1plx" path="res://presentation_manager.gd" id="22_presentation_manager"]
+[ext_resource type="Script" uid="uid://c8bvbglrb7b5q" path="res://presentation_book.gd" id="23_presentation_book"]
+[ext_resource type="Script" uid="uid://blcr1rp4wx6j5" path="res://presentation_controls.gd" id="24_presentation_controls"]
+[ext_resource type="Script" uid="uid://bw2yjbqpstovg" path="res://seashell_projector.gd" id="25_seashell_projector"]
 
 [sub_resource type="Curve" id="Curve_d13ii"]
 _data = [Vector2(0, 0.0321317), 0.0, 0.0, 0, 0, Vector2(0.102296, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.704545), 0.0, 0.0, 0, 0]
@@ -35,16 +39,16 @@ noise_type = 2
 frequency = 0.0001
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lswn8"]
-seamless = true
 noise = SubResource("FastNoiseLite_0odxb")
+seamless = true
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_a6jrf"]
-seamless = true
 noise = SubResource("FastNoiseLite_0odxb")
+seamless = true
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xuqvo"]
-seamless = true
 noise = SubResource("FastNoiseLite_0odxb")
+seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ryguw"]
 shader = ExtResource("1_getpj")
@@ -58,6 +62,7 @@ shader_parameter/clouds_scale = 1.0
 shader_parameter/clouds_smoothness = 0.03
 shader_parameter/clouds_light_color = Color(1, 1, 1, 1)
 shader_parameter/clouds_shadow_intensity = 1.0
+shader_parameter/cloud_speed_multiplier = 1.0
 shader_parameter/high_clouds_sampler = SubResource("NoiseTexture2D_xuqvo")
 shader_parameter/high_clouds_density = 0.2
 shader_parameter/top_color = Color(0.34902, 0.588235, 1, 1)
@@ -189,14 +194,14 @@ void fragment() {
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_h2yge"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bvp3"]
+noise = SubResource("FastNoiseLite_h2yge")
 seamless = true
 as_normal_map = true
-noise = SubResource("FastNoiseLite_h2yge")
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lquwl"]
+noise = SubResource("FastNoiseLite_h2yge")
 seamless = true
 as_normal_map = true
-noise = SubResource("FastNoiseLite_h2yge")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
 render_priority = 0
@@ -225,6 +230,38 @@ material = SubResource("ShaderMaterial_7mycd")
 [node name="MAIN" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.4, 3, -1.4)
 script = ExtResource("1_d13ii")
+
+[node name="PresentationManager" type="Node3D" parent="."]
+script = ExtResource("22_presentation_manager")
+
+[node name="PresentationBook" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2, 15)
+script = ExtResource("23_presentation_book")
+
+[node name="NextSlideControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 42.529, 1.7, 15.882)
+script = ExtResource("24_presentation_controls")
+
+[node name="PreviousSlideControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 42.754, 1.7, 14.653)
+script = ExtResource("24_presentation_controls")
+control_label = "Previous Slide"
+
+[node name="StartPresentationControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 42.35, 1.7, 13.244)
+script = ExtResource("24_presentation_controls")
+control_type = 2
+control_label = "Start Presentation"
+
+[node name="StopPresentationControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 42.097, 1.7, 11.781)
+script = ExtResource("24_presentation_controls")
+control_type = 2
+control_label = "Stop Presentation"
+
+[node name="SeashellProjector" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 2, 25)
+script = ExtResource("25_seashell_projector")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1u8w0")
@@ -331,40 +368,121 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 44.952
 [node name="tree" type="Node3D" parent="."]
 
 [node name="coconut_tree" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(5, 0, 0, 0, 4.92404, 0.868241, 0, -0.868241, 4.92404, 26.8525, -1.64502, 19.4856)
+transform = Transform3D(5, 0, 0, 0, 4.92404, 0.868241, 0, -0.868241, 4.92404, 31.46157, -1.64502, -8.49427)
 
 [node name="coconut_tree2" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.33013, 0.85505, 2.34923, 0, 4.69846, -1.7101, -2.5, 1.48099, 4.06899, 26.8525, -1.64502, 20.2856)
+transform = Transform3D(4.33013, 0.85505, 2.34923, 0, 4.69846, -1.7101, -2.5, 1.48099, 4.06899, 31.46157, -1.64502, -7.6942687)
 
 [node name="coconut_tree3" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.90613, -0.287397, 0.920484, 0.296956, 4.99112, -0.0244132, -0.917444, 0.0786234, 4.91448, 25.5525, -1.64502, 20.6856)
+transform = Transform3D(4.90613, -0.287397, 0.920484, 0.296956, 4.99112, -0.0244132, -0.917444, 0.0786234, 4.91448, 30.161572, -1.64502, -7.294269)
+
+[node name="coconut_tree25" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(5, 0, 0, 0, 4.92404, 0.868241, 0, -0.868241, 4.92404, 28.420942, -1.64502, -4.432945)
+
+[node name="coconut_tree26" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.33013, 0.85505, 2.34923, 0, 4.69846, -1.7101, -2.5, 1.48099, 4.06899, 28.420942, -1.64502, -3.6329436)
+
+[node name="coconut_tree27" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.90613, -0.287397, 0.920484, 0.296956, 4.99112, -0.0244132, -0.917444, 0.0786234, 4.91448, 27.120943, -1.64502, -3.232944)
+
+[node name="coconut_tree28" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(3.5431151, 0.61261964, -3.474339, 0, 4.9240394, 0.86824095, 3.5279355, -0.6152556, 3.489288, 27.908594, -3.015656, -8.0171)
+
+[node name="coconut_tree29" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.8323984, -0.43905938, -1.2063086, 0, 4.6984606, -1.7101003, 1.2837265, 1.6527762, 4.540967, 27.344124, -3.015656, -7.4502006)
+
+[node name="coconut_tree30" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.123934, -0.25913182, -2.8153179, 0.29695594, 4.9911194, -0.024413202, 2.8115802, -0.14706925, 4.1319957, 26.14068, -3.015656, -8.084015)
+
+[node name="coconut_tree31" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.9592385, 0.11063838, -0.6274612, 2.6511362e-08, 4.9240394, 0.8682409, 0.63714075, -0.8611629, 4.883898, 30.073086, -3.015656, 38.26979)
+
+[node name="coconut_tree32" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.6134014, 0.6593597, 1.8115745, -7.200835e-08, 4.698461, -1.7101005, -1.9278392, 1.5778744, 4.3351774, 29.971142, -3.015656, 39.063267)
+
+[node name="coconut_tree33" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.9830422, -0.2950729, 0.28673697, 0.296956, 4.99112, -0.02441322, -0.28478575, 0.04135999, 4.9917116, 28.630772, -3.015656, 39.29435)
 
 [node name="coconut_tree4" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(5, 0, 0, 0, 4.92404, 0.868241, 0, -0.868241, 4.92404, 49.6525, -1.64502, -56.4144)
+transform = Transform3D(5, 0, 0, 0, 4.92404, 0.868241, 0, -0.868241, 4.92404, 49.6525, -1.64502, -32.44816)
 
 [node name="coconut_tree5" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.33013, 0.85505, 2.34923, 0, 4.69846, -1.7101, -2.5, 1.48099, 4.06899, 49.6525, -1.64502, -55.6144)
+transform = Transform3D(4.33013, 0.85505, 2.34923, 0, 4.69846, -1.7101, -2.5, 1.48099, 4.06899, 49.6525, -1.64502, -31.648157)
 
 [node name="coconut_tree6" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.90613, -0.287397, 0.920484, 0.296956, 4.99112, -0.0244132, -0.917444, 0.0786234, 4.91448, 48.3525, -1.64502, -55.2144)
+transform = Transform3D(4.90613, -0.287397, 0.920484, 0.296956, 4.99112, -0.0244132, -0.917444, 0.0786234, 4.91448, 48.3525, -1.64502, -31.248163)
 
 [node name="coconut_tree7" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(5, 0, 0, 0, 4.92404, 0.868241, 0, -0.868241, 4.92404, 115.153, -1.64502, -45.9144)
+transform = Transform3D(5, 0, 0, 0, 4.92404, 0.868241, 0, -0.868241, 4.92404, 96.43822, -0.5443454, 16.840921)
 
 [node name="coconut_tree8" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.33013, 0.85505, 2.34923, 0, 4.69846, -1.7101, -2.5, 1.48099, 4.06899, 115.153, -1.64502, -45.1144)
+transform = Transform3D(4.33013, 0.85505, 2.34923, 0, 4.69846, -1.7101, -2.5, 1.48099, 4.06899, 96.43822, -0.5443454, 17.64092)
 
 [node name="coconut_tree9" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.90613, -0.287397, 0.920484, 0.296956, 4.99112, -0.0244132, -0.917444, 0.0786234, 4.91448, 113.853, -1.64502, -44.7144)
+transform = Transform3D(4.90613, -0.287397, 0.920484, 0.296956, 4.99112, -0.0244132, -0.917444, 0.0786234, 4.91448, 95.138214, -0.5443454, 18.040918)
+
+[node name="coconut_tree13" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.2803884, 0.4487478, -2.5449755, 0, 4.9240394, 0.86824095, 2.5842354, -0.7432817, 4.2153606, 96.72041, -0.5443454, 71.899994)
+
+[node name="coconut_tree14" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.9990463, -0.033456147, -0.09192228, 0, 4.6984606, -1.7101003, 0.097821, 1.709773, 4.697565, 96.30694, -0.5443454, 72.584854)
+
+[node name="coconut_tree15" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.6742067, -0.28667048, -1.7520292, 0.29695594, 4.9911194, -0.024413202, 1.7503158, -0.08123256, 4.6829267, 94.9873, -0.5443454, 72.25538)
+
+[node name="coconut_tree16" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.2803884, 0.4487478, -2.5449755, 0, 4.9240394, 0.86824095, 2.5842354, -0.7432817, 4.2153606, 33.617596, -0.5443454, 71.899994)
+
+[node name="coconut_tree17" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.9990463, -0.033456147, -0.09192228, 0, 4.6984606, -1.7101003, 0.097821, 1.709773, 4.697565, 33.20412, -0.5443454, 72.584854)
+
+[node name="coconut_tree18" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.6742067, -0.28667048, -1.7520292, 0.29695594, 4.9911194, -0.024413202, 1.7503158, -0.08123256, 4.6829267, 31.88448, -0.5443454, 72.25538)
+
+[node name="coconut_tree19" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.2803884, 0.4487478, -2.5449755, 0, 4.9240394, 0.86824095, 2.5842354, -0.7432817, 4.2153606, 33.617596, -0.5443454, 36.510666)
+
+[node name="coconut_tree20" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.9990463, -0.033456147, -0.09192228, 0, 4.6984606, -1.7101003, 0.097821, 1.709773, 4.697565, 33.20412, -0.5443454, 37.195526)
+
+[node name="coconut_tree21" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.6742067, -0.28667048, -1.7520292, 0.29695594, 4.9911194, -0.024413202, 1.7503158, -0.08123256, 4.6829267, 31.88448, -0.5443454, 36.86605)
+
+[node name="coconut_tree22" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.2803884, 0.4487478, -2.5449755, 0, 4.9240394, 0.86824095, 2.5842354, -0.7432817, 4.2153606, 33.617596, -0.5443454, -3.888124)
+
+[node name="coconut_tree23" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.9990463, -0.033456147, -0.09192228, 0, 4.6984606, -1.7101003, 0.097821, 1.709773, 4.697565, 33.20412, -0.5443454, -3.2032638)
+
+[node name="coconut_tree24" parent="tree" instance=ExtResource("11_ycdy4")]
+transform = Transform3D(4.6742067, -0.28667048, -1.7520292, 0.29695594, 4.9911194, -0.024413202, 1.7503158, -0.08123256, 4.6829267, 31.88448, -0.5443454, -3.5327392)
 
 [node name="coconut_tree10" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.92404, -0.150768, 0.85505, 0, 4.92404, 0.868241, -0.868241, -0.85505, 4.84923, 109.43, -1.64502, -45.9795)
+transform = Transform3D(4.92404, -0.150768, 0.85505, 0, 4.92404, 0.868241, -0.868241, -0.85505, 4.84923, 94.73036, -1.64502, -31.114702)
 
 [node name="coconut_tree11" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(3.83022, 1.09923, 3.02011, 1.29048e-07, 4.69846, -1.7101, -3.21394, 1.31001, 3.59923, 109.569, -1.64502, -45.1916)
+transform = Transform3D(3.83022, 1.09923, 3.02011, 1.29048e-07, 4.69846, -1.7101, -3.21394, 1.31001, 3.59923, 94.72592, -1.64502, -29.801825)
 
 [node name="coconut_tree12" parent="tree" instance=ExtResource("11_ycdy4")]
-transform = Transform3D(4.67228, -0.269378, 1.75989, 0.296956, 4.99112, -0.0244132, -1.75545, 0.127335, 4.67998, 108.358, -1.64502, -44.572)
+transform = Transform3D(4.67228, -0.269378, 1.75989, 0.296956, 4.99112, -0.0244132, -1.75545, 0.127335, 4.67998, 93.51492, -1.64502, -29.182222)
+
+[node name="small_coral2" parent="tree" instance=ExtResource("15_2cqfq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.296715, -1.4517539, -24.174683)
+
+[node name="small_coral3" parent="tree" instance=ExtResource("15_2cqfq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.605612, -1.4517539, -0.7216698)
+
+[node name="small_coral4" parent="tree" instance=ExtResource("15_2cqfq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.605612, -1.4517539, 7.906407)
+
+[node name="small_coral5" parent="tree" instance=ExtResource("15_2cqfq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.605612, -1.4517539, 16.777695)
+
+[node name="small_coral6" parent="tree" instance=ExtResource("15_2cqfq")]
+transform = Transform3D(0.7111554, 0, 0.7030349, 0, 1, 0, -0.7030349, 0, 0.7111554, 13.575243, -1.4517539, 16.777695)
+
+[node name="small_coral7" parent="tree" instance=ExtResource("15_2cqfq")]
+transform = Transform3D(0.7111554, 0, 0.7030349, 0, 1, 0, -0.7030349, 0, 0.7111554, 15.627101, -1.4517539, 19.715197)
 
 [node name="table" type="Node3D" parent="."]
 
@@ -572,5 +690,10 @@ text = "Join"
 _spawnable_scenes = PackedStringArray("uid://5q1e4q5vuh2h")
 spawn_path = NodePath("..")
 
+[connection signal="book_placed_correctly" from="PresentationBook" to="PresentationManager" method="trigger_day_night_transition"]
+[connection signal="next_slide_requested" from="NextSlideControl" to="PresentationManager" method="next_slide"]
+[connection signal="previous_slide_requested" from="PreviousSlideControl" to="PresentationManager" method="previous_slide"]
+[connection signal="presentation_start_requested" from="StartPresentationControl" to="PresentationManager" method="start_presentation"]
+[connection signal="presentation_stop_requested" from="StopPresentationControl" to="PresentationManager" method="end_presentation"]
 [connection signal="pressed" from="UI/Multiplayer/VBoxContainer/host2" to="." method="_on_host_2_pressed"]
 [connection signal="pressed" from="UI/Multiplayer/VBoxContainer/join" to="." method="_on_join_pressed"]

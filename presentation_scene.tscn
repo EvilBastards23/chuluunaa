@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://b8x7lam2n4p5q"]
+
+[ext_resource type="Script" path="res://presentation_manager.gd" id="1_presentation"]
+[ext_resource type="Script" path="res://presentation_book.gd" id="2_book"]
+[ext_resource type="Script" path="res://presentation_controls.gd" id="3_controls"]
+
+[node name="PresentationScene" type="Node3D"]
+
+[node name="PresentationManager" type="Node3D" parent="."]
+script = ExtResource("1_presentation")
+
+[node name="PresentationBook" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2, 15)
+script = ExtResource("2_book")
+
+[node name="NextSlideControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 40, 1.5, 20)
+script = ExtResource("3_controls")
+control_type = 0
+control_label = "Next Slide"
+
+[node name="PreviousSlideControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 37, 1.5, 20)
+script = ExtResource("3_controls")
+control_type = 0
+control_label = "Previous Slide"
+
+[node name="StartPresentationControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 43, 1.5, 20)
+script = ExtResource("3_controls")
+control_type = 2
+control_label = "Start Presentation"
+
+[node name="StopPresentationControl" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 46, 1.5, 20)
+script = ExtResource("3_controls")
+control_type = 2
+control_label = "Stop Presentation"
+
+[connection signal="next_slide_requested" from="NextSlideControl" to="PresentationManager" method="next_slide"]
+[connection signal="previous_slide_requested" from="PreviousSlideControl" to="PresentationManager" method="previous_slide"]
+[connection signal="presentation_start_requested" from="StartPresentationControl" to="PresentationManager" method="start_presentation"]
+[connection signal="presentation_stop_requested" from="StopPresentationControl" to="PresentationManager" method="end_presentation"]
+[connection signal="book_placed_correctly" from="PresentationBook" to="PresentationManager" method="trigger_day_night_transition"]

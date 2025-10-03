@@ -11,9 +11,20 @@ var camera_pitch := 0.0
 @onready var camera = $Node3D/Camera3D
 var interactable_door = null  # Store reference to the nearby door
 
+# Presentation system interactions
+var nearby_controls: Array[Node3D] = []
+var nearby_book: PresentationBook = null
+var is_carrying_book: bool = false
+var presentation_manager: PresentationManager = null
+
 func _ready():
 	camera.current = is_multiplayer_authority()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)  # Hide & lock cursor
+	
+	# Find presentation manager
+	presentation_manager = get_node("../PresentationManager")
+	if not presentation_manager:
+		presentation_manager = get_node("../../PresentationManager")
 
 func _enter_tree():
 	set_multiplayer_authority(name.to_int())
@@ -48,8 +59,12 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_force
 
-	if Input.is_action_just_pressed("interact") and interactable_door:
-		rpc("open_door")  # Call the open_door function on all clients
+	if Input.is_action_just_pressed("interact"):
+		handle_interaction()
+	
+	# Manual day/night toggle for testing
+	if Input.is_action_just_pressed("toggle_day_night"):
+		toggle_day_night()
 
 	move_and_slide()
 
@@ -62,6 +77,88 @@ func _on_area_exited(area):
 	if area.is_in_group("doors"):
 		interactable_door = null
 		print("Left door area!")
+
+func handle_interaction():
+	"""Handle all types of interactions"""
+	if not is_multiplayer_authority():
+		return
+	
+	# Check for nearby controls first
+	if nearby_controls.size() > 0:
+		var closest_control = get_closest_control()
+		if closest_control and closest_control.has_method("interact"):
+			closest_control.interact(self)
+			return
+	
+	# Check for book interaction
+	if nearby_book:
+		if is_carrying_book:
+			drop_book()
+		else:
+			pickup_book()
+		return
+	
+	# Check for door interaction (original functionality)
+	if interactable_door:
+		rpc("open_door")
+
+func get_closest_control() -> Node3D:
+	"""Get the closest interactive control"""
+	if nearby_controls.is_empty():
+		return null
+	
+	var closest = nearby_controls[0]
+	var closest_distance = global_position.distance_to(closest.global_position)
+	
+	for control in nearby_controls:
+		var distance = global_position.distance_to(control.global_position)
+		if distance < closest_distance:
+			closest = control
+			closest_distance = distance
+	
+	return closest
+
+func pickup_book():
+	"""Pick up the nearby book"""
+	if nearby_book and not is_carrying_book:
+		if nearby_book.pickup_book(self):
+			is_carrying_book = true
+			print("Picked up book")
+
+func drop_book():
+	"""Drop the currently carried book"""
+	if is_carrying_book and nearby_book:
+		nearby_book.drop_book()
+		is_carrying_book = false
+		print("Dropped book")
+
+func add_nearby_control(control: Node3D):
+	"""Add a control to the nearby controls list"""
+	if control not in nearby_controls:
+		nearby_controls.append(control)
+
+func remove_nearby_control(control: Node3D):
+	"""Remove a control from the nearby controls list"""
+	nearby_controls.erase(control)
+
+func set_nearby_book(book: PresentationBook):
+	"""Set the nearby book"""
+	nearby_book = book
+
+func clear_nearby_book():
+	"""Clear the nearby book reference"""
+	nearby_book = null
+
+func toggle_day_night():
+	"""Manually toggle day/night transition for testing"""
+	if not is_multiplayer_authority():
+		return
+	
+	if presentation_manager:
+		presentation_manager.trigger_day_night_transition()
+		print("🌙 Manual day/night toggle activated!")
+	else:
+		print("❌ PresentationManager not found!")
 
 @rpc("call_local", "reliable")
 func open_door():
